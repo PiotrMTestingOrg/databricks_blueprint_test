@@ -1,0 +1,5 @@
+environment    = "dev"
+project        = "ml"
+location       = "germanywestcentral"
+location_abbrv = "gwc"
+cidr           = "10.179.0.0/20"
