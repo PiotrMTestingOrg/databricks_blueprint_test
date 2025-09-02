@@ -24,19 +24,38 @@ jobs:
     deploy:
         environment: dev
         runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v3
-            - uses: azure/login@v1
-              with:
-                client-id: ${{ vars.AZURE_CLIENT_ID }}
-                tenant-id: ${{ vars.AZURE_TENANT_ID }}
-                subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        # steps:
+        #     - uses: actions/checkout@v3
+        #     - uses: azure/login@v1
+        #       with:
+        #         client-id: ${{ vars.AZURE_CLIENT_ID }}
+        #         tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        #         subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
-            - name: Run az commands
-              run: |
-                scripts/create_state_storage.ps1 
-                -SubscriptionId "${{ vars.AZURE_SUBSCRIPTION_ID }}" \
-                -Environment "${{ inputs.environment }}" \
-                -Location "germanywestcentral" \
-                -LocationAbbrv "gwc" \
-                -Project "${{ inputs.project }}"
+        #     - name: Run az commands
+        #       run: |
+        #         scripts/create_state_storage.ps1 
+        #         -SubscriptionId "${{ vars.AZURE_SUBSCRIPTION_ID }}" \
+        #         -Environment "${{ inputs.environment }}" \
+        #         -Location "germanywestcentral" \
+        #         -LocationAbbrv "gwc" \
+        #         -Project "${{ inputs.project }}"
+
+        steps:
+        - name: Azure login with OIDC
+          uses: azure/login@v2
+          with:
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
+
+        - name: Run PowerShell script
+          uses: azure/powershell@v2
+          with:
+            azPSVersion: latest
+            inlineScript: |
+              # Use Azure PowerShell commands authenticated via OIDC
+              Get-AzContext
+              # Your PowerShell logic here
+              Write-Output "Running PowerShell script with Azure CLI authentication via OIDC"
