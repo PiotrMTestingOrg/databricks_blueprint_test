@@ -25,6 +25,7 @@ jobs:
         environment: dev
         runs-on: ubuntu-latest
         steps:
+        - uses: actions/checkout@v3
         - name: Azure login with OIDC
           uses: azure/login@v2
           with:
