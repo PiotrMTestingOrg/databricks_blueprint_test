@@ -39,7 +39,7 @@ jobs:
           with:
             azPSVersion: latest
             inlineScript: |
-              scripts/create_state_storage.ps1 
+              scripts/create_state_storage.ps1 `
                 -SubscriptionId "${{ vars.AZURE_SUBSCRIPTION_ID }}" `
                 -Environment "${{ inputs.environment }}" `
                 -Location "germanywestcentral" `
