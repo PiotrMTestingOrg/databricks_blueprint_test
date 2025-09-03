@@ -1,3 +1,6 @@
+data "azurerm_client_config" "current" {
+}
+
 data "azurerm_key_vault" "key_vault" {
   name                = "kv-${var.project}-${var.environment}-${var.location_abbrv}-001"
   resource_group_name = "rg-${var.project}-shared-${var.environment}-${var.location_abbrv}-001"
