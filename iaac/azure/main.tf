@@ -117,3 +117,9 @@ resource "azurerm_role_assignment" "key_vault_databricks_secrets_officer" {
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = var.databricks_object_id
 }
+
+resource "azurerm_key_vault_secret" "workspace_id" {
+  name         = "databricks-workspace-id"
+  value       = azurerm_databricks_workspace.workspace.id
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
