@@ -69,11 +69,11 @@ resource "azurerm_storage_container" "adls_shared_container" {
 }
 
 resource "azurerm_databricks_workspace" "workspace" {
-  name                             = "dbw-${var.project}-${var.environment}-${var.location_abbrv}-001"
-  resource_group_name              = azurerm_resource_group.rg_shared.name
-  location                         = azurerm_resource_group.rg_shared.location
-  sku                              = "premium"
-  managed_resource_group_name      = "dbw-mgnd-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                        = "dbw-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  resource_group_name         = azurerm_resource_group.rg_shared.name
+  location                    = azurerm_resource_group.rg_shared.location
+  sku                         = "premium"
+  managed_resource_group_name = "dbw-mgnd-${var.project}-${var.environment}-${var.location_abbrv}-001"
 
   custom_parameters {
     no_public_ip                                         = true
@@ -118,8 +118,36 @@ resource "azurerm_role_assignment" "key_vault_databricks_secrets_officer" {
   principal_id         = var.databricks_object_id
 }
 
-resource "azurerm_key_vault_secret" "workspace_id" {
+resource "azurerm_role_assignment" "key_vault_spn_secrets_officer" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = var.deployment_identity_id
+}
+
+resource "azurerm_key_vault_secret" "secret_workspace_id" {
   name         = "databricks-workspace-id"
-  value       = azurerm_databricks_workspace.workspace.id
+  value        = azurerm_databricks_workspace.workspace.id
   key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on   = [azurerm_role_assignment.key_vault_spn_secrets_officer]
+}
+
+resource "azurerm_key_vault_secret" "secret_access_connector_id" {
+  name         = "databricks-access-connector-id"
+  value        = azurerm_databricks_access_connector.access_connector.id
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on   = [azurerm_role_assignment.key_vault_spn_secrets_officer]
+}
+
+resource "azurerm_key_vault_secret" "secret_adls_metastore_id" {
+  name         = "adls-metastore-id"
+  value        = azurerm_storage_account.adls_metastore.id
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on   = [azurerm_role_assignment.key_vault_spn_secrets_officer]
+}
+
+resource "azurerm_key_vault_secret" "secret_adls_shared_id" {
+  name         = "adls-shared-id"
+  value        = azurerm_storage_account.adls_shared.id
+  key_vault_id = azurerm_key_vault.key_vault.id
+  depends_on   = [azurerm_role_assignment.key_vault_spn_secrets_officer]
 }
