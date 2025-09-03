@@ -15,11 +15,11 @@ jobs:
           with:
             lfs: true
 
-        - uses: azure/login@v2
-          with:
-            client-id: ${{ vars.AZURE_CLIENT_ID }}
-            tenant-id: ${{ vars.AZURE_TENANT_ID }}
-            subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        # - uses: azure/login@v2
+        #   with:
+        #     client-id: ${{ vars.AZURE_CLIENT_ID }}
+        #     tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        #     subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
         - name: Plan
           uses: ./.github/actions/run-terraform/
@@ -27,6 +27,19 @@ jobs:
             stack: azure
             command: plan
             flags: ""
+            environment: dev
+            state_storage: ${{ vars.STATE_STORAGE_NAME }}
+            state_resource_group: ${{ vars.STATE_STORAGE_RG_NAME }}
+            azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
+            azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
+            azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+        - name: Apply
+          uses: ./.github/actions/run-terraform/
+          with:   
+            stack: azure
+            command: apply
+            flags: "--auto-approve"
             environment: dev
             state_storage: ${{ vars.STATE_STORAGE_NAME }}
             state_resource_group: ${{ vars.STATE_STORAGE_RG_NAME }}
