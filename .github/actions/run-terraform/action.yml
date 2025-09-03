@@ -57,7 +57,7 @@ runs:
           BACKEND_STORAGE_CONTAINER_NAME: ${{ inputs.state_storage }}
           TF_BACKEND_KEY: ${{ inputs.stack }}-state
           ENV: ${{ inputs.environment }}
-        working-directory: Iaac/
+        working-directory: iaac/${{ inputs.stack }}
         run: |
           terraform init \
             -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
