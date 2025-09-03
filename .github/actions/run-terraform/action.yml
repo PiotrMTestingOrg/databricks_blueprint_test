@@ -37,7 +37,7 @@ runs:
   using: 'composite'
   steps:
       - uses: actions/checkout@v3
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           client-id: ${{ inputs.azure_client_id }}
           tenant-id: ${{ inputs.azure_tenant_id }}

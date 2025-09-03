@@ -18,7 +18,6 @@ jobs:
           with:   
             stack: azure
             command: plan
-            runs-on: ubuntu-latest
             flags: ""
             environment: dev
             state_storage: ${{ vars.STATE_STORAGE_NAME }}
