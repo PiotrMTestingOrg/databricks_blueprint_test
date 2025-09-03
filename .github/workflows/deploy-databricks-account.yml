@@ -20,7 +20,7 @@ jobs:
             stack: account
             command: plan
             flags: ""
-            environment: dev
+            environment: shared
             state_storage: ${{ vars.STATE_STORAGE_NAME }}
             state_resource_group: ${{ vars.STATE_STORAGE_RG_NAME }}
             azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
