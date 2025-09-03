@@ -35,7 +35,7 @@ resource "azurerm_storage_account" "adls_metastore" {
   account_replication_type        = "LRS"
   default_to_oauth_authentication = true
   https_traffic_only_enabled      = true
-  shared_access_key_enabled       = false
+  shared_access_key_enabled       = true
   min_tls_version                 = "TLS1_2"
   is_hns_enabled                  = true
 }
@@ -56,7 +56,7 @@ resource "azurerm_storage_account" "adls_shared" {
   account_replication_type        = "LRS"
   default_to_oauth_authentication = true
   https_traffic_only_enabled      = true
-  shared_access_key_enabled       = false
+  shared_access_key_enabled       = true
   min_tls_version                 = "TLS1_2"
   is_hns_enabled                  = true
 }
