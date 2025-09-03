@@ -83,6 +83,7 @@ resource "azurerm_databricks_workspace" "workspace" {
     public_subnet_network_security_group_association_id  = azurerm_subnet_network_security_group_association.host_association.id
     private_subnet_network_security_group_association_id = azurerm_subnet_network_security_group_association.container_association.id
   }
+
 }
 
 resource "azurerm_databricks_access_connector" "access_connector" {

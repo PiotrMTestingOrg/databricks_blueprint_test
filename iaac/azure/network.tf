@@ -59,7 +59,6 @@ resource "azurerm_subnet" "subnet_container" {
 resource "azurerm_subnet_network_security_group_association" "container_association" {
   subnet_id                 = azurerm_subnet.subnet_container.id
   network_security_group_id = azurerm_network_security_group.nsg_workspace.id
-}
 
 resource "azurerm_public_ip" "public_ip" {
   name                = "pip-${var.project}-${var.environment}-${var.location_abbrv}-001"

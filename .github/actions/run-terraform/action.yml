@@ -60,6 +60,7 @@ runs:
           TF_VAR_subscription_id: ${{ inputs.azure_subscription_id }}
           TF_VAR_deployment_identity_id: ${{ inputs.deployment_identity_id }}
         working-directory: iaac/${{ inputs.stack }}
+
         run: |
           terraform init \
             -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
