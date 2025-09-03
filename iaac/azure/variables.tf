@@ -21,3 +21,11 @@ variable "subscription_id" {
 variable "cidr" {
   description = "Network range for created virtual network."
 }
+
+variable "databricks_object_id" {
+  description = "The object ID of the Databricks service principal in Azure AD."
+}
+
+variable "deployment_identity_id" {
+  description = "The object ID of the Databricks deployment identity in Azure AD."
+}

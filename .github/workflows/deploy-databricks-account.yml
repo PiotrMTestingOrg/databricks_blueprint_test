@@ -1,4 +1,4 @@
-name: Deploy Azure Infra
+name: Deploy Databricks Account Configuration
 on:
   workflow_dispatch:
 
@@ -17,7 +17,7 @@ jobs:
         - name: Plan
           uses: ./.github/actions/run-terraform/
           with:   
-            stack: azure
+            stack: account
             command: plan
             flags: ""
             environment: dev
@@ -37,7 +37,7 @@ jobs:
         - name: Apply
           uses: ./.github/actions/run-terraform/
           with:   
-            stack: azure
+            stack: account
             command: apply
             flags: "--auto-approve"
             environment: dev

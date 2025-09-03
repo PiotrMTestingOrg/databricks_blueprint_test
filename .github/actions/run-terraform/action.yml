@@ -37,7 +37,7 @@ runs:
   using: 'composite'
   steps:
       - uses: actions/checkout@v3
-      - uses: azure/login@v1
+      - uses: azure/login@v2
         with:
           client-id: ${{ inputs.azure_client_id }}
           tenant-id: ${{ inputs.azure_tenant_id }}
@@ -47,16 +47,20 @@ runs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Run Terraform command
+        shell: bash
         env:
-          ARM_SUBSCRIPTION_ID: ${{ vars.azure_subscription_id }}
-          ARM_TENANT_ID: ${{ vars.azure_tenant_id }}
+          ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription_id }}
+          ARM_TENANT_ID: ${{ inputs.azure_tenant_id }}
           ARM_CLIENT_ID: ${{ inputs.azure_client_id }}
           BACKEND_RESOURCE_GROUP_NAME: ${{ inputs.state_resource_group }}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{ inputs.state_storage }}
-          BACKEND_STORAGE_CONTAINER_NAME: ${{ stack.state_storage }}
-          TF_BACKEND_KEY: ${{ inputs.stack }}-state
+          BACKEND_STORAGE_CONTAINER_NAME: ${{ inputs.stack }}-state
+          TF_BACKEND_KEY: ${{ inputs.stack }}-state.tfstate
           ENV: ${{ inputs.environment }}
-        working-directory: Iaac/
+          TF_VAR_subscription_id: ${{ inputs.azure_subscription_id }}
+          TF_VAR_deployment_identity_id: ${{ inputs.deployment_identity_id }}
+        working-directory: iaac/${{ inputs.stack }}
+
         run: |
           terraform init \
             -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \

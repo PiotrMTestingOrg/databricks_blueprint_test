@@ -1,5 +1,5 @@
 locals {
   adls_containers = [
-    "metastore"
+    "shared"
   ]
 }
