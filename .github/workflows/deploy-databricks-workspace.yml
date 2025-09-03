@@ -26,6 +26,7 @@ jobs:
             azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
             azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
             azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            azure_principal_id: ${{ vars.AZURE_PRINCIPAL_ID }}
   apply:
     environment: dev
     runs-on: 'ubuntu-latest'
@@ -46,3 +47,4 @@ jobs:
             azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
             azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
             azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            azure_principal_id: ${{ vars.AZURE_PRINCIPAL_ID }}

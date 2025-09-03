@@ -32,6 +32,9 @@ inputs:
       azure_subscription_id:
         required: true
         description: Subscription ID of the Azure account.
+      azure_principal_id:
+        required: true
+        description: Principal ID of the Azure identity.
 
 runs:
   using: 'composite'
@@ -58,7 +61,7 @@ runs:
           TF_BACKEND_KEY: ${{ inputs.stack }}-state.tfstate
           ENV: ${{ inputs.environment }}
           TF_VAR_subscription_id: ${{ inputs.azure_subscription_id }}
-          TF_VAR_deployment_identity_id: ${{ inputs.deployment_identity_id }}
+          TF_VAR_deployment_identity_id: ${{ inputs.azure_principal_id }}
         working-directory: iaac/${{ inputs.stack }}
 
         run: |
