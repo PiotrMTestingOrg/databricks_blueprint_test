@@ -47,6 +47,7 @@ runs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Run Terraform command
+        shell: bash
         env:
           ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription_id }}
           ARM_TENANT_ID: ${{ inputs.azure_tenant_id }}
