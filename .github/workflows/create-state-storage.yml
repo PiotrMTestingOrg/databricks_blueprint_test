@@ -25,18 +25,23 @@ jobs:
         environment: dev
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: azure/login@v1
-              with:
-                client-id: ${{ vars.AZURE_CLIENT_ID }}
-                tenant-id: ${{ vars.AZURE_TENANT_ID }}
-                subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        - uses: actions/checkout@v3
+        - name: Azure login with OIDC
+          uses: azure/login@v2
+          with:
+            client-id: ${{ vars.AZURE_CLIENT_ID }}
+            tenant-id: ${{ vars.AZURE_TENANT_ID }}
+            subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+            enable-AzPSSession: true
 
-            - name: Run az commands
-              run: |
-                scripts/create_state_storage.ps1 
-                -SubscriptionId "${{ vars.AZURE_SUBSCRIPTION_ID }}" \
-                -Environment "${{ inputs.environment }}" \
-                -Location "germanywestcentral" \
-                -LocationAbbrv "gwc" \
+        - name: Run PowerShell script
+          uses: azure/powershell@v2
+          with:
+            azPSVersion: latest
+            inlineScript: |
+              scripts/create_state_storage.ps1 `
+                -SubscriptionId "${{ vars.AZURE_SUBSCRIPTION_ID }}" `
+                -Environment "${{ inputs.environment }}" `
+                -Location "germanywestcentral" `
+                -LocationAbbrv "gwc" `
                 -Project "${{ inputs.project }}"
