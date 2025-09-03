@@ -65,7 +65,7 @@ resource "azurerm_public_ip" "public_ip" {
   name                = "pip-${var.project}-${var.environment}-${var.location_abbrv}-001"
   location            = azurerm_resource_group.rg_network.location
   resource_group_name = azurerm_resource_group.rg_network.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
   sku                 = "Standard"
 }
 
