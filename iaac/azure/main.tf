@@ -84,3 +84,36 @@ resource "azurerm_databricks_workspace" "workspace" {
     private_subnet_network_security_group_association_id = azurerm_subnet_network_security_group_association.container_association.id
   }
 }
+
+resource "azurerm_databricks_access_connector" "access_connector" {
+  name                = "dbac-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  resource_group_name = azurerm_resource_group.rg_shared.name
+  location            = azurerm_resource_group.rg_shared.location
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_role_assignment" "adls_metastore_connector_data_contributor" {
+  scope                = azurerm_storage_account.adls_metastore.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_databricks_access_connector.access_connector.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "adls_shared_connector_data_contributor" {
+  scope                = azurerm_storage_account.adls_shared.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_databricks_access_connector.access_connector.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "key_vault_connector_secrets_officer" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = azurerm_databricks_access_connector.access_connector.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "key_vault_databricks_secrets_officer" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = var.databricks_object_id
+}
