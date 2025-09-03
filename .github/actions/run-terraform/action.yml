@@ -55,7 +55,7 @@ runs:
           BACKEND_RESOURCE_GROUP_NAME: ${{ inputs.state_resource_group }}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{ inputs.state_storage }}
           BACKEND_STORAGE_CONTAINER_NAME: ${{ inputs.stack }}-state
-          TF_BACKEND_KEY: ${{ inputs.stack }}.tfstate
+          TF_BACKEND_KEY: ${{ inputs.stack }}-state.tfstate
           ENV: ${{ inputs.environment }}
         working-directory: iaac/${{ inputs.stack }}
         run: |
