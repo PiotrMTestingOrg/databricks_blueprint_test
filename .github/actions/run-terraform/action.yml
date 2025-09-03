@@ -57,6 +57,7 @@ runs:
           BACKEND_STORAGE_CONTAINER_NAME: ${{ inputs.stack }}-state
           TF_BACKEND_KEY: ${{ inputs.stack }}-state.tfstate
           ENV: ${{ inputs.environment }}
+          TF_VAR_subscription_id: ${{ inputs.azure_subscription_id }}
         working-directory: iaac/${{ inputs.stack }}
         run: |
           terraform init \
