@@ -48,8 +48,8 @@ runs:
 
       - name: Run Terraform command
         env:
-          ARM_SUBSCRIPTION_ID: ${{ vars.azure_subscription_id }}
-          ARM_TENANT_ID: ${{ vars.azure_tenant_id }}
+          ARM_SUBSCRIPTION_ID: ${{ inputs.azure_subscription_id }}
+          ARM_TENANT_ID: ${{ inputs.azure_tenant_id }}
           ARM_CLIENT_ID: ${{ inputs.azure_client_id }}
           BACKEND_RESOURCE_GROUP_NAME: ${{ inputs.state_resource_group }}
           BACKEND_STORAGE_ACCOUNT_NAME: ${{ inputs.state_storage }}
