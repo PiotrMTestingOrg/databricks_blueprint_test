@@ -1,0 +1,69 @@
+name: run-terraform
+description: 'Runs specific terraform action'
+inputs:
+      stack:
+        required: true
+        default: azure
+        description: Stack for the specific deployment e.g. azure.
+      command:
+        required: true
+        default: plan
+        description: Terraform command to run - plan, apply etc.
+      flags:
+        required: false
+        default: ""
+        description: Flags to be used with the command  - --auto-approve etc. 
+      state_storage:
+        required: true
+        description: Storage account for the Iaac state for the env.
+      state_resource_group:
+        required: true
+        description: Resource group where the state_storage is located. 
+      environment:
+        required: true
+        default: dev
+        description: Environment used to locate terraform parameter set. 
+      azure_client_id:
+        required: true
+        description: Client ID of the identity used for automated deployment. 
+      azure_tenant_id:
+        required: true
+        description: Tenant ID of the Azure directory.
+      azure_subscription_id:
+        required: true
+        description: Subscription ID of the Azure account.
+
+runs:
+  using: 'composite'
+  steps:
+      - uses: actions/checkout@v3
+      - uses: azure/login@v1
+        with:
+          client-id: ${{ inputs.azure_client_id }}
+          tenant-id: ${{ inputs.azure_tenant_id }}
+          subscription-id: ${{ inputs.azure_subscription_id }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run Terraform command
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ vars.azure_subscription_id }}
+          ARM_TENANT_ID: ${{ vars.azure_tenant_id }}
+          ARM_CLIENT_ID: ${{ inputs.azure_client_id }}
+          BACKEND_RESOURCE_GROUP_NAME: ${{ inputs.state_resource_group }}
+          BACKEND_STORAGE_ACCOUNT_NAME: ${{ inputs.state_storage }}
+          BACKEND_STORAGE_CONTAINER_NAME: ${{ stack.state_storage }}
+          TF_BACKEND_KEY: ${{ inputs.stack }}-state
+          ENV: ${{ inputs.environment }}
+        working-directory: Iaac/
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=$BACKEND_RESOURCE_GROUP_NAME" \
+            -backend-config="storage_account_name=$BACKEND_STORAGE_ACCOUNT_NAME" \
+            -backend-config="container_name=$BACKEND_STORAGE_CONTAINER_NAME" \
+            -backend-config="key=$TF_BACKEND_KEY" \
+            -backend-config="use_oidc=true"
+
+          terraform validate
+          terraform ${{ inputs.command }} -var-file="parameters/$ENV.tfvars" ${{ inputs.flags }}
