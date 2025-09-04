@@ -1,5 +1,5 @@
 environment          = "dev"
-project              = "ml"
+project              = "mld"
 location             = "germanywestcentral"
 location_abbrv       = "gwc"
 cidr                 = "10.70.0.0/23"
