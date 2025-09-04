@@ -1,20 +1,20 @@
 resource "azurerm_resource_group" "rg_storage" {
-  name     = "rg-${var.project}-storage-${var.environment}-${var.location_abbrv}-001"
+  name     = "rg${var.project}storage${var.environment}${var.location_abbrv}001"
   location = var.location
 }
 
 resource "azurerm_resource_group" "rg_shared" {
-  name     = "rg-${var.project}-shared-${var.environment}-${var.location_abbrv}-001"
+  name     = "rg${var.project}shared${var.environment}${var.location_abbrv}001"
   location = var.location
 }
 
 resource "azurerm_resource_group" "rg_network" {
-  name     = "rg-${var.project}-network-${var.environment}-${var.location_abbrv}-001"
+  name     = "rg${var.project}network${var.environment}${var.location_abbrv}001"
   location = var.location
 }
 
 resource "azurerm_key_vault" "key_vault" {
-  name                        = "kv-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                        = "kv${var.project}${var.environment}${var.location_abbrv}001"
   location                    = azurerm_resource_group.rg_shared.location
   resource_group_name         = azurerm_resource_group.rg_shared.name
   enabled_for_disk_encryption = true
@@ -69,11 +69,11 @@ resource "azurerm_storage_container" "adls_shared_container" {
 }
 
 resource "azurerm_databricks_workspace" "workspace" {
-  name                        = "dbw-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                        = "dbw${var.project}${var.environment}${var.location_abbrv}001"
   resource_group_name         = azurerm_resource_group.rg_shared.name
   location                    = azurerm_resource_group.rg_shared.location
   sku                         = "premium"
-  managed_resource_group_name = "dbw-mgnd-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  managed_resource_group_name = "rg${var.project}dbw${var.environment}${var.location_abbrv}001"
 
   custom_parameters {
     no_public_ip                                         = true
@@ -87,7 +87,7 @@ resource "azurerm_databricks_workspace" "workspace" {
 }
 
 resource "azurerm_databricks_access_connector" "access_connector" {
-  name                = "dbac-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                = "dbac${var.project}${var.environment}${var.location_abbrv}001"
   resource_group_name = azurerm_resource_group.rg_shared.name
   location            = azurerm_resource_group.rg_shared.location
   identity {

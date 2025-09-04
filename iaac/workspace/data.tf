@@ -2,8 +2,8 @@ data "azurerm_client_config" "current" {
 }
 
 data "azurerm_key_vault" "key_vault" {
-  name                = "kv-${var.project}-${var.environment}-${var.location_abbrv}-001"
-  resource_group_name = "rg-${var.project}-shared-${var.environment}-${var.location_abbrv}-001"
+  name                = "kv${var.project}${var.environment}${var.location_abbrv}001"
+  resource_group_name = "rg${var.project}shared${var.environment}${var.location_abbrv}001"
 }
 
 data "azurerm_key_vault_secret" "secret_workspace_id" {
@@ -33,4 +33,14 @@ data "azurerm_key_vault_secret" "secret_adls_metastore_id" {
 data "azurerm_key_vault_secret" "secret_adls_shared_id" {
   name         = "adls-shared-id"
   key_vault_id = data.azurerm_key_vault.key_vault.id
+}
+
+data "databricks_group" "developer_group" {
+  provider     = databricks.accounts
+  display_name = var.developer_group
+}
+
+data "databricks_group" "admin_group" {
+  provider     = databricks.accounts
+  display_name = var.admin_group
 }

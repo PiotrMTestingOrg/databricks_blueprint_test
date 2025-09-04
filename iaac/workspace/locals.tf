@@ -9,4 +9,9 @@ locals {
       name = "shared"
     }
   ]
+
+  # Cluster properties
+  spark_version    = "16.4.x-scala2.13"
+  spark_ml_version = "16.4.x-cpu-ml-scala2.13"
+  node_type_id     = "Standard_D4ds_v5"
 }

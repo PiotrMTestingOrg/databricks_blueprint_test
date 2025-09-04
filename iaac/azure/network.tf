@@ -1,12 +1,12 @@
 resource "azurerm_virtual_network" "virtual_network" {
-  name                = "vnet-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                = "vnet${var.project}${var.environment}${var.location_abbrv}001"
   resource_group_name = azurerm_resource_group.rg_network.name
   location            = azurerm_resource_group.rg_network.location
   address_space       = [var.cidr]
 }
 
 resource "azurerm_network_security_group" "nsg_workspace" {
-  name                = "nsg-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                = "nsg${var.project}${var.environment}${var.location_abbrv}001"
   resource_group_name = azurerm_resource_group.rg_network.name
   location            = azurerm_resource_group.rg_network.location
 }
@@ -62,7 +62,7 @@ resource "azurerm_subnet_network_security_group_association" "container_associat
 }
 
 resource "azurerm_public_ip" "public_ip" {
-  name                = "pip-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                = "pip${var.project}${var.environment}${var.location_abbrv}001"
   location            = azurerm_resource_group.rg_network.location
   resource_group_name = azurerm_resource_group.rg_network.name
   allocation_method   = "Static"
@@ -70,7 +70,7 @@ resource "azurerm_public_ip" "public_ip" {
 }
 
 resource "azurerm_nat_gateway" "nat_gateway" {
-  name                = "ng-${var.project}-${var.environment}-${var.location_abbrv}-001"
+  name                = "ng${var.project}${var.environment}${var.location_abbrv}001"
   location            = azurerm_resource_group.rg_network.location
   resource_group_name = azurerm_resource_group.rg_network.name
   sku_name            = "Standard"

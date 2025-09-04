@@ -17,3 +17,11 @@ variable "subscription_id" {
 variable "dbx_account_id" {
   description = "ID of the Databricks account."
 }
+
+variable "developer_group" {
+  description = "Name of the developer group in Databricks"
+}
+
+variable "admin_group" {
+  description = "Name of the admin group in Databricks"
+}

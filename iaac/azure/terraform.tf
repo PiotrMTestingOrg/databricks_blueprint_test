@@ -8,7 +8,7 @@ terraform {
   }
   backend "azurerm" {
     subscription_id      = "355f69b4-9fad-45c6-b881-2e7a4d376b18"
-    resource_group_name  = "rg-ml-mgmt-dev-gwc-001"
+    resource_group_name  = "rgmlmgmtdevgwc001"
     storage_account_name = "stmliaacstatedevgwc001"
     container_name       = "workspace-state"
     key                  = "workspace-state.tfstate"
