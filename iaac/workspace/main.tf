@@ -203,3 +203,55 @@ resource "databricks_secret_acl" "project_group_secret_read" {
   permission = "READ"
   scope      = databricks_secret_scope.secret_scope.name
 }
+
+resource "databricks_cluster_policy" "policy_job_standard" {
+  name = "policy_job_standard"
+  definition = jsonencode({
+    "spark_conf.spark.databricks.cluster.profile" : {
+      "type" : "forbidden",
+      "hidden" : true
+    },
+    "spark_version" : {
+      "type" : "allowlist",
+      "values" : ["auto:latest-lts-ml", "auto:prev-lts-ml", "auto:latest-lts", "auto:prev-lts"]
+    },
+    "node_type_id" : {
+      "type" : "allowlist",
+      "values" : ["Standard_D4ds_v5", "Standard_D8ds_v5"]
+    },
+    "driver_node_type_id" : {
+      "type" : "allowlist",
+      "values" : ["Standard_D4ds_v5", "Standard_D8ds_v5"]
+    },
+    "autoscale.min_workers" : {
+      "type" : "fixed",
+      "value" : 1,
+    },
+    "autoscale.max_workers" : {
+      "type" : "range",
+      "maxValue" : 4,
+      "defaultValue" : 2
+    },
+    "cluster_type" : {
+      "type" : "fixed",
+      "value" : "job"
+    },
+    "runtime_engine" : {
+      "type" : "fixed",
+      "value" : "STANDARD"
+    },
+    "data_security_mode" : {
+      "type" : "allowlist",
+      "values" : ["SINGLE_USER", "USER_ISOLATION"]
+    }
+  })
+}
+
+# Permission to use the job_multi policy
+resource "databricks_permissions" "job_standard_use" {
+  cluster_policy_id = databricks_cluster_policy.policy_job_standard.id
+  access_control {
+    group_name       = data.databricks_group.developer_group.display_name
+    permission_level = "CAN_USE"
+  }
+}
