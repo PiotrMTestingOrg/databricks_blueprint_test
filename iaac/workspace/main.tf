@@ -75,7 +75,7 @@ resource "databricks_grant" "developer_catalog_grant" {
   provider = databricks.workspace
   catalog  = databricks_catalog.catalog.name
 
-  principal  = data.databricks_group.admin_group.display_name
+  principal  = data.databricks_group.developer_group.display_name
   privileges = ["USE_CATALOG", "USE_SCHEMA", "EXECUTE", "READ_VOLUME", "SELECT", "MODIFY", "WRITE_VOLUME", "CREATE_FUNCTION", "CREATE_TABLE"]
 }
 
