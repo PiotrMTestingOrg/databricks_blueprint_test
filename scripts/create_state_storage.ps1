@@ -18,7 +18,7 @@ param(
     [string]$Project
 )
 
-$ResourceGroupName = "rg-${Project}-mgmt-${Environment}-${LocationAbbrv}-001"
+$ResourceGroupName = "rg${Project}mgmt${Environment}${LocationAbbrv}001"
 $StorageAccountName = "st${Project}iaacstate${Environment}${LocationAbbrv}001"
 
 az account set --subscription $SubscriptionId
