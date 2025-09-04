@@ -9,7 +9,7 @@ resource "databricks_mws_permission_assignment" "developer_group_assignment" {
   provider     = databricks.accounts
   workspace_id = data.azurerm_databricks_workspace.dbx_workspaces.workspace_id
   principal_id = data.databricks_group.developer_group.id
-  permissions  = "USER"
+  permissions  = ["USER"]
   depends_on   = [databricks_metastore_assignment.workspace_assignment]
 }
 
@@ -18,7 +18,7 @@ resource "databricks_mws_permission_assignment" "admin_group_assignment" {
   provider     = databricks.accounts
   workspace_id = data.azurerm_databricks_workspace.dbx_workspaces.workspace_id
   principal_id = data.databricks_group.admin_group.id
-  permissions  = "ADMIN"
+  permissions  = ["ADMIN"]
   depends_on   = [databricks_metastore_assignment.workspace_assignment]
 }
 
@@ -98,7 +98,7 @@ resource "databricks_volume" "shared_external_volume" {
   volume_type      = "EXTERNAL"
   owner            = data.databricks_group.admin_group.display_name
   storage_location = databricks_external_location.external_location_shared.url
-  depends_on       = [databricks_schema.schema, databricks_external_location.external_location]
+  depends_on       = [databricks_schema.schema, databricks_external_location.external_location_shared]
 }
 
 resource "databricks_cluster" "standard_single_cluster" {
