@@ -124,6 +124,17 @@ resource "databricks_cluster" "standard_single_cluster" {
   is_pinned               = true
 }
 
+# Assign permissions to all workspace users for that cluster
+resource "databricks_permissions" "cluster_usage_standard_single" {
+  provider   = databricks.workspace
+  cluster_id = databricks_cluster.standard_single_cluster.id
+  access_control {
+    group_name       = data.databricks_group.developer_group.display_name
+    permission_level = "CAN_RESTART"
+  }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
+}
+
 # ML Ad_hoc processing cluster
 resource "databricks_cluster" "ml_multi_cluster" {
   provider                = databricks.workspace
@@ -138,6 +149,17 @@ resource "databricks_cluster" "ml_multi_cluster" {
   autoscale {
     min_workers = 1
     max_workers = 4
+  }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
+}
+
+# Assign permissions to all workspace users for that cluster
+resource "databricks_permissions" "cluster_usage_ml_multi" {
+  provider   = databricks.workspace
+  cluster_id = databricks_cluster.ml_multi_cluster.id
+  access_control {
+    group_name       = data.databricks_group.developer_group.display_name
+    permission_level = "CAN_RESTART"
   }
   depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
