@@ -1,6 +1,6 @@
 resource "databricks_metastore_assignment" "workspace_assignment" {
   provider     = databricks.accounts
-  metastore_id = data.databricks_current_metastore.metastore.id
+  metastore_id = data.databricks_metastore.metastore.id
   workspace_id = data.azurerm_databricks_workspace.dbx_workspace.workspace_id
 }
 
@@ -32,6 +32,7 @@ resource "databricks_credential" "storage_credential" {
   purpose        = "STORAGE"
   force_update   = true
   owner          = data.databricks_group.admin_group.display_name
+  depends_on     = [databricks_metastore_assignment.workspace_assignment]
 }
 
 resource "databricks_external_location" "external_location_metastore" {
@@ -131,6 +132,7 @@ resource "databricks_permissions" "cluster_usage_standard_single" {
     group_name       = data.databricks_group.developer_group.display_name
     permission_level = "CAN_RESTART"
   }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 resource "databricks_permissions" "cluster_admin_usage_standard_single" {
@@ -140,6 +142,7 @@ resource "databricks_permissions" "cluster_admin_usage_standard_single" {
     group_name       = data.databricks_group.admin_group.display_name
     permission_level = "CAN_MANAGE"
   }
+  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
 }
 
 # ML Ad_hoc processing cluster
@@ -157,6 +160,7 @@ resource "databricks_cluster" "ml_multi_cluster" {
     min_workers = 1
     max_workers = 4
   }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 # Assign permissions to all workspace users for that cluster
@@ -167,6 +171,7 @@ resource "databricks_permissions" "cluster_usage_ml_multi" {
     group_name       = data.databricks_group.developer_group.display_name
     permission_level = "CAN_RESTART"
   }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 resource "databricks_permissions" "cluster_admin_usage_ml_multi" {
@@ -176,6 +181,7 @@ resource "databricks_permissions" "cluster_admin_usage_ml_multi" {
     group_name       = data.databricks_group.admin_group.display_name
     permission_level = "CAN_MANAGE"
   }
+  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
 }
 
 # ML Ad_hoc processing cluster
@@ -193,6 +199,7 @@ resource "databricks_cluster" "ml_multi_gpu_cluster" {
     min_workers = 1
     max_workers = 4
   }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 # Assign permissions to all workspace users for that cluster
@@ -203,6 +210,7 @@ resource "databricks_permissions" "cluster_usage_ml_multi_gpu" {
     group_name       = data.databricks_group.developer_group.display_name
     permission_level = "CAN_RESTART"
   }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 resource "databricks_permissions" "cluster_admin_usage_ml_multi_gpu" {
@@ -212,6 +220,7 @@ resource "databricks_permissions" "cluster_admin_usage_ml_multi_gpu" {
     group_name       = data.databricks_group.admin_group.display_name
     permission_level = "CAN_MANAGE"
   }
+  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
 }
 
 # Secret scope used by the workspace, backed by env's Azure Key Vault
@@ -223,9 +232,7 @@ resource "databricks_secret_scope" "secret_scope" {
     resource_id = data.azurerm_key_vault.key_vault.id
     dns_name    = data.azurerm_key_vault.key_vault.vault_uri
   }
-  lifecycle {
-    prevent_destroy = true
-  }
+  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
 }
 
 # Allow project group to read from the secret scope

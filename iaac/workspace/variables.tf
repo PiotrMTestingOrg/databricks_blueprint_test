@@ -6,6 +6,10 @@ variable "project" {
   description = "Name of the project, used for naming purposes eg. ml"
 }
 
+variable "location" {
+  description = "Location where the solution will be deployed eg. polandcentral"
+}
+
 variable "location_abbrv" {
   description = "Abbreviation of the location, used for naming purposes eg. plc"
 }

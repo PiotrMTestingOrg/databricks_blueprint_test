@@ -16,8 +16,9 @@ data "azurerm_databricks_workspace" "dbx_workspace" {
   resource_group_name = provider::azurerm::parse_resource_id(data.azurerm_key_vault_secret.secret_workspace_id.value)["resource_group_name"]
 }
 
-data "databricks_current_metastore" "metastore" {
-  provider = databricks.workspace
+data "databricks_metastore" "metastore" {
+  provider = databricks.accounts
+  region   = var.location
 }
 
 data "azurerm_key_vault_secret" "secret_access_connector_id" {
