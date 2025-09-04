@@ -11,7 +11,7 @@ data "azurerm_key_vault_secret" "secret_workspace_id" {
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
 
-data "azurerm_databricks_workspace" "dbx_workspaces" {
+data "azurerm_databricks_workspace" "dbx_workspace" {
   name                = provider::azurerm::parse_resource_id(data.azurerm_key_vault_secret.secret_workspace_id.value)["resource_name"]
   resource_group_name = provider::azurerm::parse_resource_id(data.azurerm_key_vault_secret.secret_workspace_id.value)["resource_group_name"]
 }

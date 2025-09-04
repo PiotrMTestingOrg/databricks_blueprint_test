@@ -1,13 +1,13 @@
 resource "databricks_metastore_assignment" "workspace_assignment" {
   provider     = databricks.accounts
   metastore_id = data.databricks_current_metastore.metastore.id
-  workspace_id = data.azurerm_databricks_workspace.dbx_workspaces.workspace_id
+  workspace_id = data.azurerm_databricks_workspace.dbx_workspace.workspace_id
 }
 
 # Assign Entra Groups to onboarded workspaces
 resource "databricks_mws_permission_assignment" "developer_group_assignment" {
   provider     = databricks.accounts
-  workspace_id = data.azurerm_databricks_workspace.dbx_workspaces.workspace_id
+  workspace_id = data.azurerm_databricks_workspace.dbx_workspace.workspace_id
   principal_id = data.databricks_group.developer_group.id
   permissions  = ["USER"]
   depends_on   = [databricks_metastore_assignment.workspace_assignment]
@@ -16,7 +16,7 @@ resource "databricks_mws_permission_assignment" "developer_group_assignment" {
 # Assign Entra Groups to onboarded workspaces
 resource "databricks_mws_permission_assignment" "admin_group_assignment" {
   provider     = databricks.accounts
-  workspace_id = data.azurerm_databricks_workspace.dbx_workspaces.workspace_id
+  workspace_id = data.azurerm_databricks_workspace.dbx_workspace.workspace_id
   principal_id = data.databricks_group.admin_group.id
   permissions  = ["ADMIN"]
   depends_on   = [databricks_metastore_assignment.workspace_assignment]
