@@ -124,27 +124,6 @@ resource "databricks_cluster" "standard_single_cluster" {
   is_pinned               = true
 }
 
-# Assign permissions to all workspace users for that cluster
-resource "databricks_permissions" "cluster_usage_standard_single" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.standard_single_cluster.id
-  access_control {
-    group_name       = data.databricks_group.developer_group.display_name
-    permission_level = "CAN_RESTART"
-  }
-  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
-}
-
-resource "databricks_permissions" "cluster_admin_usage_standard_single" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.standard_single_cluster.id
-  access_control {
-    group_name       = data.databricks_group.admin_group.display_name
-    permission_level = "CAN_MANAGE"
-  }
-  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
-}
-
 # ML Ad_hoc processing cluster
 resource "databricks_cluster" "ml_multi_cluster" {
   provider                = databricks.workspace
@@ -161,27 +140,6 @@ resource "databricks_cluster" "ml_multi_cluster" {
     max_workers = 4
   }
   depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
-}
-
-# Assign permissions to all workspace users for that cluster
-resource "databricks_permissions" "cluster_usage_ml_multi" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.ml_multi_cluster.id
-  access_control {
-    group_name       = data.databricks_group.developer_group.display_name
-    permission_level = "CAN_RESTART"
-  }
-  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
-}
-
-resource "databricks_permissions" "cluster_admin_usage_ml_multi" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.ml_multi_cluster.id
-  access_control {
-    group_name       = data.databricks_group.admin_group.display_name
-    permission_level = "CAN_MANAGE"
-  }
-  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
 }
 
 # Secret scope used by the workspace, backed by env's Azure Key Vault
@@ -205,7 +163,8 @@ resource "databricks_secret_acl" "project_group_secret_read" {
 }
 
 resource "databricks_cluster_policy" "policy_job_standard" {
-  name = "policy_job_standard"
+  provider = databricks.workspace
+  name     = "policy_job_standard"
   definition = jsonencode({
     "spark_conf.spark.databricks.cluster.profile" : {
       "type" : "forbidden",
@@ -249,6 +208,7 @@ resource "databricks_cluster_policy" "policy_job_standard" {
 
 # Permission to use the job_multi policy
 resource "databricks_permissions" "job_standard_use" {
+  provider          = databricks.workspace
   cluster_policy_id = databricks_cluster_policy.policy_job_standard.id
   access_control {
     group_name       = data.databricks_group.developer_group.display_name
