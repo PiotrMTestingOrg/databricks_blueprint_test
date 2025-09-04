@@ -185,43 +185,43 @@ resource "databricks_permissions" "cluster_admin_usage_ml_multi" {
 }
 
 # ML Ad_hoc processing cluster
-resource "databricks_cluster" "ml_multi_gpu_cluster" {
-  provider                = databricks.workspace
-  cluster_name            = "ml_multi_gpu"
-  spark_version           = local.spark_ml_version
-  node_type_id            = "Standard_NC4as_T4_v3"
-  autotermination_minutes = 15
-  data_security_mode      = "SINGLE_USER"
-  runtime_engine          = "STANDARD"
-  single_user_name        = data.databricks_group.developer_group.display_name
-  is_pinned               = true
-  autoscale {
-    min_workers = 1
-    max_workers = 4
-  }
-  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
-}
+# resource "databricks_cluster" "ml_multi_gpu_cluster" {
+#   provider                = databricks.workspace
+#   cluster_name            = "ml_multi_gpu"
+#   spark_version           = local.spark_ml_version
+#   node_type_id            = "Standard_NC4as_T4_v3"
+#   autotermination_minutes = 15
+#   data_security_mode      = "SINGLE_USER"
+#   runtime_engine          = "STANDARD"
+#   single_user_name        = data.databricks_group.developer_group.display_name
+#   is_pinned               = true
+#   autoscale {
+#     min_workers = 1
+#     max_workers = 4
+#   }
+#   depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
+# }
 
-# Assign permissions to all workspace users for that cluster
-resource "databricks_permissions" "cluster_usage_ml_multi_gpu" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.ml_multi_gpu_cluster.id
-  access_control {
-    group_name       = data.databricks_group.developer_group.display_name
-    permission_level = "CAN_RESTART"
-  }
-  depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
-}
+# # Assign permissions to all workspace users for that cluster
+# resource "databricks_permissions" "cluster_usage_ml_multi_gpu" {
+#   provider   = databricks.workspace
+#   cluster_id = databricks_cluster.ml_multi_gpu_cluster.id
+#   access_control {
+#     group_name       = data.databricks_group.developer_group.display_name
+#     permission_level = "CAN_RESTART"
+#   }
+#   depends_on = [databricks_mws_permission_assignment.developer_group_assignment]
+# }
 
-resource "databricks_permissions" "cluster_admin_usage_ml_multi_gpu" {
-  provider   = databricks.workspace
-  cluster_id = databricks_cluster.ml_multi_gpu_cluster.id
-  access_control {
-    group_name       = data.databricks_group.admin_group.display_name
-    permission_level = "CAN_MANAGE"
-  }
-  depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
-}
+# resource "databricks_permissions" "cluster_admin_usage_ml_multi_gpu" {
+#   provider   = databricks.workspace
+#   cluster_id = databricks_cluster.ml_multi_gpu_cluster.id
+#   access_control {
+#     group_name       = data.databricks_group.admin_group.display_name
+#     permission_level = "CAN_MANAGE"
+#   }
+#   depends_on = [databricks_mws_permission_assignment.admin_group_assignment]
+# }
 
 # Secret scope used by the workspace, backed by env's Azure Key Vault
 resource "databricks_secret_scope" "secret_scope" {
