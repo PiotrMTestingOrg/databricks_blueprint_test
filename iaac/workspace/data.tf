@@ -17,7 +17,7 @@ data "azurerm_databricks_workspace" "dbx_workspaces" {
 }
 
 data "databricks_current_metastore" "metastore" {
-  provider = databricks.accounts
+  provider = databricks.workspace
 }
 
 data "azurerm_key_vault_secret" "secret_access_connector_id" {
